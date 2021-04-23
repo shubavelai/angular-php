@@ -1,0 +1,232 @@
+<div *ngIf="data.todo == 'removeDialog'">
+    <mat-spinner [hidden]="!isload"></mat-spinner>
+    <mat-dialog-content class="text-center mat-typography">
+        <i class="material-icons warn">priority_high</i>
+        <h2>Are you sure?</h2>
+        <h4>{{data.text}}</h4>
+        <h4 *ngIf="data.action == 'delete'">You won't be able to revert this!</h4>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button (click)="closeDialog()" cdkFocusInitial class="mat-raised-button">Close</button>
+        <button (click)="remove(data.action)" class="mat-raised-button mat-warn">{{data.actionWord}}</button>
+    </mat-dialog-actions>
+</div>
+
+<div *ngIf="data.todo == 'editUser'">
+    <h2 mat-dialog-title>{{data.title}}</h2>
+    <mat-divider></mat-divider>
+    <form class="col-md-12" *ngIf="data.todo == 'editUser' && list != ''" [formGroup]="editUserForm">
+        <input type="hidden" formControlName="id" [(ngModel)]='list.parentId'>
+        <mat-dialog-content>
+            <mat-spinner [hidden]="!isload"></mat-spinner>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput [(ngModel)]="list.name" formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>E-Mail Id</mat-label>
+                <input matInput [(ngModel)]="list.mail" formControlName="mail" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput [(ngModel)]="list.mobile" formControlName="mobile" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Address Line 1</mat-label>
+                <input matInput [(ngModel)]="list.address1" formControlName="address1" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Address Line 2</mat-label>
+                <input matInput [(ngModel)]="list.address2" formControlName="address2" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput [(ngModel)]="list.address3" formControlName="address3">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Blood Group</mat-label>
+                <input matInput [(ngModel)]="list.blood" formControlName="blood" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Gender</mat-label>
+                <input matInput [(ngModel)]="list.gender" formControlName="gender" required>
+            </mat-form-field>
+
+            <mat-form-field class="col-md-5 uploadProfile" appearance="outline">
+                <div>
+                    <input type="file" #fileInput id="uploadFile" (change)="uploadFileEvt($event)" name="dp" accept="image/*" />
+                    <input type="hidden" id="hiddenUpload" name="hiddenUpload" value="{{hiddenUpload}}" />
+                    <mat-toolbar>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input matInput [(ngModel)]="list.dp" readonly formControlName="dp" />
+                                <button mat-flat-button color="primary">Choose File</button>
+                            </div>
+                        </div>
+                    </mat-toolbar>
+                    <img src="{{dataimage}}" width="150px" class="uploadImage">
+                </div>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button (click)="closeDialog()" class="mat-raised-button">Close</button>
+            <button (click)="updateUser()" [disabled]="!editUserForm.valid" class="mat-raised-button mat-primary">Update</button>
+        </mat-dialog-actions>
+    </form>
+</div>
+
+<div *ngIf="data.todo == 'addUser'">
+    <h2 mat-dialog-title>{{data.title}}</h2>
+    <mat-divider></mat-divider>
+    <form class="col-md-12" [formGroup]="editUserForm">
+        <mat-dialog-content>
+            <div [hidden]="!isload" class="spinner">
+                <div class="spin-backdrop"></div>
+                <mat-spinner></mat-spinner>
+            </div>
+
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>E-Mail Id</mat-label>
+                <input matInput formControlName="mail" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput formControlName="mobile" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Address Line 1</mat-label>
+                <input matInput formControlName="address1" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Address Line 2</mat-label>
+                <input matInput formControlName="address2" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="address3">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Blood Group</mat-label>
+                <input matInput formControlName="blood" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Gender</mat-label>
+                <input matInput formControlName="gender" required>
+            </mat-form-field>
+            <mat-form-field class="col-md-5 uploadProfile" appearance="outline">
+                <div>
+
+                    <!-- Fetch selected filed on change -->
+                    <input type="file" #fileInput id="uploadFile" (change)="uploadFileEvt($event)" name="dp" accept="image/*" />
+                    <input type="hidden" id="hiddenUpload" name="hiddenUpload" value="{{hiddenUpload}}" />
+                    <mat-toolbar>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Display files names -->
+                                <input matInput readonly formControlName="dp" />
+                                <!-- Browse Button -->
+                                <button mat-flat-button color="primary">
+                            Choose File
+                    </button>
+                            </div>
+                        </div>
+                    </mat-toolbar>
+                    <img src="{{dataimage}}" width="150px" class="uploadImage">
+                </div>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button (click)="closeDialog()" class="mat-raised-button">Close</button>
+            <button (click)="addUser()" [disabled]="!editUserForm.valid" class="mat-raised-button mat-primary">Add</button>
+        </mat-dialog-actions>
+    </form>
+</div>
+
+<div *ngIf="data.todo == 'addChild'">
+    <h2 mat-dialog-title>{{data.title}}</h2>
+    <mat-divider></mat-divider>
+    <form class="col-md-12" [formGroup]="childForm">
+        <mat-dialog-content>
+            <div [hidden]="!isload" class="spinner">
+                <div class="spin-backdrop"></div>
+                <mat-spinner></mat-spinner>
+            </div>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Blood Group</mat-label>
+                <input matInput formControlName="blood">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Gender</mat-label>
+                <input matInput formControlName="gender">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput formControlName="dob">
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button (click)="closeDialog()" class="mat-raised-button">Close</button>
+            <button (click)="addChild()" [disabled]="!childForm.valid" class="mat-raised-button mat-primary">Add Child</button>
+        </mat-dialog-actions>
+    </form>
+</div>
+
+<!-- Acknowledges -->
+
+<div *ngIf="data.todo == 'showSuccess'">
+    <mat-dialog-content class="text-center mat-typography">
+        <i class="material-icons success">done</i>
+        <h2>{{data.msg}}</h2>
+        <!-- <h4 *ngIf="data.action == 'delete'">User has added!</h4> -->
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button (click)="reload(data.link)" class="btn success mat-raised-button">Close</button>
+    </mat-dialog-actions>
+</div>
+<div *ngIf=" data.todo=='showError' ">
+    <mat-dialog-content class="text-center mat-typography ">
+        <i class="material-icons danger ">clear</i>
+        <h2>{{data.msg}}</h2>
+        <!-- <h4 *ngIf="data.action=='delete' ">User creation has declined!</h4> -->
+    </mat-dialog-content>
+    <mat-dialog-actions align="center ">
+        <button (click)="reload(data.link) " class="btn mat-raised-button ">Close</button>
+    </mat-dialog-actions>
+</div>
+<div *ngIf="data.todo=='showExist' ">
+    <mat-dialog-content class="text-center mat-typography ">
+        <i class="material-icons warn ">priority_high</i>
+        <h2>{{data.msg}}</h2>
+        <!-- <h4 *ngIf="data.action=='delete' ">Already a user has exist with same data!</h4> -->
+    </mat-dialog-content>
+    <mat-dialog-actions align="center ">
+        <button (click)="reload(data.link) " class="mat-raised-button ">Close</button>
+    </mat-dialog-actions>
+</div>
+<div *ngIf="data.todo=='showLoginError' ">
+    <mat-dialog-content class="text-center mat-typography ">
+        <i class="material-icons danger " (click)="reload(data.link) ">clear</i>
+        <h2>{{data.msg}}</h2>
+        <!-- <h4 *ngIf="data.action=='delete' ">User creation has declined!</h4> -->
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button (click)="reload(data.link) " class="btn btn-info ">Close</button>
+    </mat-dialog-actions>
+</div>
+<div *ngIf="data.todo=='showLoginSuccess'">
+    <mat-dialog-content class="text-center mat-typography">
+        <i class="material-icons success" (click)="reload(data.link)">done</i>
+        <h2>{{data.msg}}</h2>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button (click)="reload(data.link) " class="btn btn-info ">Close</button>
+    </mat-dialog-actions>
+</div>
